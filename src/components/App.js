@@ -1,31 +1,42 @@
-import React, {useState} from "react";
-import SearchByName from "./SearchByName";
+  import React from "react";
+//import SearchByName from "./SearchByName";
 import StudentList from "./StudentList"
 
-function App(){
+class App extends React.Component{
 
-  const [studentList, setStudentList] = useState([]);
+  constructor(props) {
+    super(props);
+    this.state = {
+      studentList: []
+    };
+  }
 
-  const makeApiCall = () => {
-    fetch("http://localhost:5000/api/animals")
+  makeApiCall = () => {
+    fetch("https://api.hatchways.io/assessment/students")
     .then(response => response.json())
     .then(
       (jsonifiedResponse) => {
-        setStudentList(jsonifiedResponse["students"]);
+        this.setState({
+          studentList: jsonifiedResponse["students"]
+        });
       })
       .catch((error) => {
         alert(error.message);
       });
   }
 
-  makeApiCall();
-  
-  return (
-    <React.Fragment>
-      <SearchByName />
-      <StudentList studentList={studentList}/>
-    </React.Fragment>
-  );
+  componentDidMount() {
+    this.makeApiCall();
+  }
+
+  render(){
+    return (
+      <React.Fragment>
+        {/* <SearchByName /> */}
+        <StudentList studentList={this.state.studentList}/>
+      </React.Fragment>
+    );
+  }
 }
 
 export default App;

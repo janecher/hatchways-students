@@ -10,11 +10,13 @@ function Student(props){
   const average = (array) =>{
     let average = 0;
     for(let i=0; i<array.length; i++){
-      average +=array[i];
+      average += parseInt(array[i]);
+      console.log(average);
     }
     if(array.length != 0)
     {
       average /= array.length;
+      console.log(average);
     }
     return average;
   }
@@ -27,7 +29,7 @@ function Student(props){
 
   return (
     <React.Fragment>
-      <div className={}>
+      <div>
         <img src={img} alt="Profile picture"/>
         <h3>{firstName} {lastName}</h3>
         <p>Email: {email}</p>
