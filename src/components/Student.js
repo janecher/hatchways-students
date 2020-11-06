@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import Grades from "./Grades";
 import PropTypes from "prop-types";
 
 function Student(props){
@@ -21,25 +22,45 @@ function Student(props){
     return average;
   }
 
+  const toggleGradeList = () => {
+    setShowGradesList(!showGradesList);
+  }
+
   let gradeList = null;
 
-  // if(showGradesList){
-  //   currentPage = <GradeList grades={grades} />
-  // } 
+  let buttonSign = null
+
+  if(showGradesList){
+    gradeList = <Grades grades={grades} />
+    buttonSign = <span class="fa fa-minus" aria-hidden="true"></span>
+  } else {
+    gradeList = null;
+    buttonSign = <span class="fa fa-plus" aria-hidden="true"></span>
+  } 
 
   return (
     <React.Fragment>
-      <div>
-        <img src={img} alt="Profile picture"/>
-        <h3>{firstName} {lastName}</h3>
-        <p>Email: {email}</p>
-        <p>Company: {company}</p>
-        <p>Skill: {skill}</p>
-        <p>Average: {average(grades)}</p>
+      <div className="row">
+        <div className="col-3 text-center align-text-center">
+          <img src={img} alt="Profile picture" className="img-fluid rounded-circle border"/>
+        </div>
+        <div className="col-7">
+          <h2><b>{firstName.toUpperCase()} {lastName.toUpperCase()}</b></h2>
+          <p className="pl-3 m-0">Email: {email}</p>
+          <p className="pl-3 m-0">Company: {company}</p>
+          <p className="pl-3 m-0">Skill: {skill}</p>
+          <p className="pl-3 m-0">Average: {average(grades)}</p>
+          <div className="mt-3">
+            {gradeList}
+          </div>
+        </div>        
+        <div className="col-2">
+          <button type="button" class="btn btn-light btn-lg" onClick={toggleGradeList}>
+            {buttonSign}          
+          </button>
+        </div>
       </div>
-      <div>
-        {gradeList}
-      </div>
+      <hr/>
     </React.Fragment>
   );
 }

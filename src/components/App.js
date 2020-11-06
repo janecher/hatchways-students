@@ -7,7 +7,8 @@ class App extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      studentList: []
+      studentList: [],
+      searchStudents: []
     };
   }
 
@@ -29,11 +30,26 @@ class App extends React.Component{
     this.makeApiCall();
   }
 
+  handleSearch = e => {
+    const { value } = e.target;
+    const lowercasedValue = value.toLowerCase();
+
+    this.setState(prevState => {
+      const searchStudents = prevState.studentList.filter(element =>
+        element.dataConnectionName.toLowerCase().includes(lowercasedValue)
+      );
+    });
+  };
+
   render(){
     return (
       <React.Fragment>
-        {/* <SearchByName /> */}
-        <StudentList studentList={this.state.studentList}/>
+        <div className = "card col-lg-8 col-md-12 mx-auto">
+          <div className = "card-body">
+            {/* <SearchByName /> */}
+            <StudentList studentList={this.state.studentList}/>
+          </div>
+        </div>
       </React.Fragment>
     );
   }

@@ -6,7 +6,6 @@ function StudentList(props){
 
   return (
     <React.Fragment>
-      <hr/>
       {props.studentList.map((student) =>
         <Student
           img = {student.pic}
