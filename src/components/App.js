@@ -8,17 +8,22 @@ class App extends React.Component{
     super(props);
     this.state = {
       studentList: [],
-      searchStudents: []
+      searchStudentList: [],
+      query: ""
     };
   }
 
   makeApiCall = () => {
     fetch("https://api.hatchways.io/assessment/students")
     .then(response => response.json())
-    .then(
-      (jsonifiedResponse) => {
+    .then(jsonResponse => {
+        const { query } = this.state;
+        const searchStudentList = jsonResponse["students"].filter(element => {
+          return element.firstName.toLowerCase().includes(query.toLowerCase()) || element.lastName.toLowerCase().includes(query.toLowerCase())
+        });
         this.setState({
-          studentList: jsonifiedResponse["students"]
+          studentList: jsonResponse["students"],
+          searchStudentList
         });
       })
       .catch((error) => {
@@ -30,24 +35,34 @@ class App extends React.Component{
     this.makeApiCall();
   }
 
-  handleSearch = e => {
-    const { value } = e.target;
-    const lowercasedValue = value.toLowerCase();
+  handleSearch = event => {
+    const query = event.target.value;
 
     this.setState(prevState => {
-      const searchStudents = prevState.studentList.filter(element =>
-        element.dataConnectionName.toLowerCase().includes(lowercasedValue)
-      );
+      const searchStudentList = prevState.studentList.filter(element => {
+        return element.firstName.toLowerCase().includes(query.toLowerCase()) || element.lastName.toLowerCase().includes(query.toLowerCase());
+      });
+
+      return {
+        query,
+        searchStudentList
+      };
     });
   };
-
+  
   render(){
     return (
       <React.Fragment>
         <div className = "card col-lg-8 col-md-12 mx-auto">
           <div className = "card-body">
-            {/* <SearchByName /> */}
-            <StudentList studentList={this.state.studentList}/>
+            <form>
+              <input
+                placeholder="Search by name"
+                value={this.state.query}
+                onChange={this.handleSearch}
+              />
+            </form>
+            <StudentList studentList={this.state.searchStudentList}/>
           </div>
         </div>
       </React.Fragment>

@@ -49,7 +49,7 @@ function Student(props){
           <p className="pl-3 m-0">Email: {email}</p>
           <p className="pl-3 m-0">Company: {company}</p>
           <p className="pl-3 m-0">Skill: {skill}</p>
-          <p className="pl-3 m-0">Average: {average(grades)}</p>
+          <p className="pl-3 m-0">Average: {average(grades)}%</p>
           <div className="mt-3">
             {gradeList}
           </div>
