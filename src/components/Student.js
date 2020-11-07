@@ -11,11 +11,8 @@ function Student(props){
 
   const average = (array) =>{
     let average = 0;
-    for(let i=0; i<array.length; i++){
-      average += parseInt(array[i]);
-    }
-    if(array.length != 0)
-    {
+    array.forEach(element => average += parseInt(element));
+    if(array.length !== 0) {
       average /= array.length;
     }
     return average;
@@ -26,9 +23,11 @@ function Student(props){
   }
 
   const onEnterInputTag = (event) => {
-    if(event.keyCode === 13) {
+    const EnterKeyCode = 13;
+    if(event.keyCode === EnterKeyCode) {
       event.preventDefault();
       props.addTagToStudent(id, event.target.value);
+      event.currentTarget.value = "";
     }
   }
 

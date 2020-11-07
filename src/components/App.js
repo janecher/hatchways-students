@@ -6,8 +6,8 @@ class App extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      studentList: [],
-      searchStudentList: [],
+      studentList: [], // Original student list from the API call
+      searchStudentList: [], // Filtered student list
       query: "",
       tagQuery: ""
     };
@@ -48,40 +48,36 @@ class App extends React.Component{
   };
 
   handleSearch = (query, tagQuery) => {
-    if(!query && !tagQuery) {
-      this.setState({
-        searchStudentList: this.state.studentList
-      });
-    } else if(!query) {
-      const studentWithTag = this.state.studentList.filter(element => element.tags);
-      const studentWithSearchTag = studentWithTag.filter(element => element["tags"].filter(tag => tag.includes(tagQuery)).length !== 0);
-      this.setState({
-        searchStudentList: studentWithSearchTag
-      });
-    } else if(!tagQuery) {
-      const studentSearchByName = this.state.studentList.filter(element => element.firstName.toLowerCase().includes(query.toLowerCase()) || element.lastName.toLowerCase().includes(query.toLowerCase()));
-      this.setState({
-        searchStudentList: studentSearchByName
-      });
-    } else {
-      const studentSearchByName = this.state.studentList.filter(element => element.firstName.toLowerCase().includes(query.toLowerCase()) || element.lastName.toLowerCase().includes(query.toLowerCase()));
-      const studentWithTag = studentSearchByName.filter(element => element.tags);
-      const studentWithSearchTag = studentWithTag.filter(element => element["tags"].filter(tag => tag.includes(tagQuery)).length !== 0);
-      this.setState({
-        searchStudentList: studentWithSearchTag
-      });
+    let studentList = this.state.studentList
+    if(query) {
+      studentList = this.searchByName(studentList, query)
     }
+    if(tagQuery) {
+      studentList = this.searchByTag(studentList, tagQuery)
+    }
+    this.setState({
+         searchStudentList: studentList
+        });
+  }
+
+  searchByName = (studentList, query) => {
+    return studentList
+        .filter(element => element.firstName.toLowerCase().includes(query.toLowerCase()) ||
+                           element.lastName.toLowerCase().includes(query.toLowerCase()) ||
+                           (element.firstName + " " + element.lastName).toLowerCase().includes(query.toLowerCase()));
+  }
+
+  searchByTag = (studentList, tagQuery) => {
+    const studentWithTag = studentList.filter(element => element.tags);
+    return studentWithTag.filter(element => element["tags"].filter(tag => tag.includes(tagQuery)).length !== 0)
   }
   
   handleAddTagToStudent = (id, tag) => {
     const editedStudent = this.state.studentList.filter(student => student.id === id)[0];
-    if(editedStudent.tags) {
-      editedStudent.tags.push(tag);
-
-    } else {
+    if(!editedStudent.tags) {
       editedStudent.tags = [];
-      editedStudent.tags.push(tag);
-    } 
+    }
+    editedStudent.tags.push(tag);
     this.setState({
       studentList: this.state.studentList.filter(student => student.id !== id).concat(editedStudent)
     });

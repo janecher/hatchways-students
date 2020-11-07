@@ -25,9 +25,9 @@ function StudentList(props){
   );
 }
 
-
 StudentList.propTypes = {
   studentList: PropTypes.array,
   addTagToStudent: PropTypes.func
 };
+
 export default StudentList;

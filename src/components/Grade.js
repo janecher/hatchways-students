@@ -9,8 +9,8 @@ function Grade(props){
   );
 }
 
-
 Grade.propTypes = {
   grade: PropTypes.string
 };
+
 export default Grade;

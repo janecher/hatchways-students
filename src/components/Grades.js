@@ -12,8 +12,8 @@ function Grades(props){
   );
 }
 
-
 Grades.propTypes = {
   gradesList: PropTypes.array
 };
+
 export default Grades;
