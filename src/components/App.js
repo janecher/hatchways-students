@@ -1,5 +1,4 @@
-  import React from "react";
-//import SearchByName from "./SearchByName";
+import React from "react";
 import StudentList from "./StudentList"
 
 class App extends React.Component{
@@ -50,19 +49,34 @@ class App extends React.Component{
     });
   };
   
+  handleAddTagToStudent = (index, tag) => {
+    const newArray = [...this.state.studentList];
+    const editedStudent = newArray[index];
+    if(editedStudent.tags) {
+      editedStudent.tags.push(tag);
+
+    } else {
+      editedStudent.tags = [];
+      editedStudent.tags.push(tag);
+    } 
+    this.setState({
+      studentList: newArray
+    });
+  }
+
   render(){
     return (
       <React.Fragment>
         <div className = "card col-lg-8 col-md-12 mx-auto">
           <div className = "card-body">
-            <form>
-              <input
-                placeholder="Search by name"
-                value={this.state.query}
-                onChange={this.handleSearch}
-              />
-            </form>
-            <StudentList studentList={this.state.searchStudentList}/>
+            <input
+              placeholder="Search by name"
+              value={this.state.query}
+              onChange={this.handleSearch}
+              className = "col-12 border-0 shadow-none"
+            />
+            <hr/>
+            <StudentList studentList={this.state.searchStudentList} addTagToStudent={this.handleAddTagToStudent}/>
           </div>
         </div>
       </React.Fragment>

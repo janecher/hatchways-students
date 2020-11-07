@@ -6,7 +6,7 @@ function StudentList(props){
 
   return (
     <React.Fragment>
-      {props.studentList.map((student) =>
+      {props.studentList.map((student, index) =>
         <Student
           img = {student.pic}
           firstName = {student.firstName}
@@ -15,8 +15,11 @@ function StudentList(props){
           company = {student.company}
           skill = {student.skill}
           grades = {student.grades}
-          id={student.id}
-          key={student.id}/>
+          tags = {student.tags ? student.tags : null}
+          id={index}
+          key={index}
+          addTagToStudent = {props.addTagToStudent}
+        />
       )}
     </React.Fragment>
   );
@@ -24,6 +27,7 @@ function StudentList(props){
 
 
 StudentList.propTypes = {
-  studentList: PropTypes.array
+  studentList: PropTypes.array,
+  addTagToStudent: PropTypes.func
 };
 export default StudentList;

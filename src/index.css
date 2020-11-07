@@ -15,3 +15,12 @@ code {
 body {
   font-family: Raleway;
 }
+
+input:focus {
+  outline: none;
+}
+
+.tags {
+  border-radius: 2px;
+  background-color: #E8E8E8;
+}
