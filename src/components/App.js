@@ -61,6 +61,7 @@ class App extends React.Component{
   }
 
   searchByName = (studentList, query) => {
+    // NOTE: To improve performance for large student collections, we could use dictionaries here.
     return studentList
         .filter(element => element.firstName.toLowerCase().includes(query.toLowerCase()) ||
                            element.lastName.toLowerCase().includes(query.toLowerCase()) ||
