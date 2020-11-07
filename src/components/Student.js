@@ -66,7 +66,7 @@ function Student(props){
               className = "border-0"
             />
           </div>
-          <div className="mt-3">
+          <div className="mt-3 pl-3">
             {gradeList}
           </div>
         </div>        

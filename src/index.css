@@ -24,3 +24,8 @@ input:focus {
   border-radius: 2px;
   background-color: #E8E8E8;
 }
+
+img {
+  width: 100px;
+  height: 100px;
+}

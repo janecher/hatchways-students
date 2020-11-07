@@ -8,7 +8,8 @@ class App extends React.Component{
     this.state = {
       studentList: [],
       searchStudentList: [],
-      query: ""
+      query: "",
+      tagQuery: ""
     };
   }
 
@@ -16,13 +17,9 @@ class App extends React.Component{
     fetch("https://api.hatchways.io/assessment/students")
     .then(response => response.json())
     .then(jsonResponse => {
-        const { query } = this.state;
-        const searchStudentList = jsonResponse["students"].filter(element => {
-          return element.firstName.toLowerCase().includes(query.toLowerCase()) || element.lastName.toLowerCase().includes(query.toLowerCase())
-        });
         this.setState({
           studentList: jsonResponse["students"],
-          searchStudentList
+          searchStudentList: jsonResponse["students"]
         });
       })
       .catch((error) => {
@@ -34,24 +31,50 @@ class App extends React.Component{
     this.makeApiCall();
   }
 
-  handleSearch = event => {
+  handleNameSearch = event => {
     const query = event.target.value;
-
-    this.setState(prevState => {
-      const searchStudentList = prevState.studentList.filter(element => {
-        return element.firstName.toLowerCase().includes(query.toLowerCase()) || element.lastName.toLowerCase().includes(query.toLowerCase());
-      });
-
-      return {
-        query,
-        searchStudentList
-      };
-    });
+    this.setState ({
+      query: query
+    })
+    this.handleSearch(query, this.state.tagQuery);
   };
+
+  handleTagSearch = event => {
+    const tagQuery = event.target.value;
+    this.setState ({
+      tagQuery: tagQuery
+    });
+    this.handleSearch(this.state.query, tagQuery);
+  };
+
+  handleSearch = (query, tagQuery) => {
+    if(!query && !tagQuery) {
+      this.setState({
+        searchStudentList: this.state.studentList
+      });
+    } else if(!query) {
+      const studentWithTag = this.state.studentList.filter(element => element.tags);
+      const studentWithSearchTag = studentWithTag.filter(element => element["tags"].filter(tag => tag.includes(tagQuery)).length !== 0);
+      this.setState({
+        searchStudentList: studentWithSearchTag
+      });
+    } else if(!tagQuery) {
+      const studentSearchByName = this.state.studentList.filter(element => element.firstName.toLowerCase().includes(query.toLowerCase()) || element.lastName.toLowerCase().includes(query.toLowerCase()));
+      this.setState({
+        searchStudentList: studentSearchByName
+      });
+    } else {
+      const studentSearchByName = this.state.studentList.filter(element => element.firstName.toLowerCase().includes(query.toLowerCase()) || element.lastName.toLowerCase().includes(query.toLowerCase()));
+      const studentWithTag = studentSearchByName.filter(element => element.tags);
+      const studentWithSearchTag = studentWithTag.filter(element => element["tags"].filter(tag => tag.includes(tagQuery)).length !== 0);
+      this.setState({
+        searchStudentList: studentWithSearchTag
+      });
+    }
+  }
   
-  handleAddTagToStudent = (index, tag) => {
-    const newArray = [...this.state.studentList];
-    const editedStudent = newArray[index];
+  handleAddTagToStudent = (id, tag) => {
+    const editedStudent = this.state.studentList.filter(student => student.id === id)[0];
     if(editedStudent.tags) {
       editedStudent.tags.push(tag);
 
@@ -60,7 +83,7 @@ class App extends React.Component{
       editedStudent.tags.push(tag);
     } 
     this.setState({
-      studentList: newArray
+      studentList: this.state.studentList.filter(student => student.id !== id).concat(editedStudent)
     });
   }
 
@@ -72,7 +95,14 @@ class App extends React.Component{
             <input
               placeholder="Search by name"
               value={this.state.query}
-              onChange={this.handleSearch}
+              onChange={this.handleNameSearch}
+              className = "col-12 border-0 shadow-none"
+            />
+            <hr/>
+            <input
+              placeholder="Search by tag"
+              value={this.state.tagQuery}
+              onChange={this.handleTagSearch}
               className = "col-12 border-0 shadow-none"
             />
             <hr/>
